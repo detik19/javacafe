@@ -3,6 +3,7 @@ package sample1;
 class B 
 {
 	  static A a = new A(1);
+	  static A staticA = new A(2);
 
 	  B() 
 	  {
@@ -15,5 +16,4 @@ class B
 	    System.out.println("f2(" + marker + ")");
 	  }
 
-	  static A staticA = new A(2);
 }
