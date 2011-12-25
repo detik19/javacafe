@@ -5,6 +5,7 @@ class C
 	  A a = new A(3);
 
 	  static A staticA = new A(4);
+	  static A staticA2 = new A(5);
 
 	  C() 
 	  {
@@ -17,6 +18,5 @@ class C
 	    System.out.println("f3(" + marker + ")");
 	  }
 
-	  static A staticA2 = new A(5);
 }
 
