@@ -12,6 +12,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 
 import javax.swing.JPanel;
@@ -53,12 +55,16 @@ public class InputEdit extends SingleFrameApplication {
     private JLabel jLabel2;
     private JLabel jLabel3;
     private JLabel JLabelNRP;
+    private JMenuBar jMenuBar1;
     private JButton jButtonUpdate;
     private JButton jButtonClear;
     private JTextField jTextFile;
     private JButton jButtonRambah;
     private JLabel jLabel4;
     private JButton jButtonInput;
+    private JButton jButtonDelete;
+    private JMenu jMenu2;
+    private JMenu jMenu1;
     private JTextField jTextFieldRiset;
     private JLabel jLabelRiset;
     private JTextField jTextFieldNRP;
@@ -85,6 +91,20 @@ public class InputEdit extends SingleFrameApplication {
     			jButton2.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
     					try {
+    						{
+    							jMenuBar1 = new JMenuBar();
+    							getMainFrame().setJMenuBar(jMenuBar1);
+    							{
+    								jMenu1 = new JMenu();
+    								jMenuBar1.add(jMenu1);
+    			jMenu1.setName("jMenu1");
+    							}
+    							{
+    								jMenu2 = new JMenu();
+    								jMenuBar1.add(jMenu2);
+    			jMenu2.setName("jMenu2");
+    							}
+    						}
 							jButton2MouseClicked(evt);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
@@ -174,7 +194,7 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jButtonInput = new JButton();
     			topPanel.add(jButtonInput);
-    			jButtonInput.setBounds(219, 167, 67, 23);
+    			jButtonInput.setBounds(182, 167, 67, 23);
     			jButtonInput.setName("jButtonInput");
     			jButtonInput.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
@@ -214,7 +234,7 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jButtonClear = new JButton();
     			topPanel.add(jButtonClear);
-    			jButtonClear.setBounds(156, 167, 57, 23);
+    			jButtonClear.setBounds(110, 167, 57, 23);
     			jButtonClear.setName("jButtonClear");
     			jButtonClear.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
@@ -225,11 +245,26 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jButtonUpdate = new JButton();
     			topPanel.add(jButtonUpdate);
-    			jButtonUpdate.setBounds(302, 167, 67, 23);
+    			jButtonUpdate.setBounds(259, 167, 67, 23);
     			jButtonUpdate.setName("jButtonUpdate");
+    			jButtonUpdate.addMouseListener(new MouseAdapter() {
+    				public void mouseClicked(MouseEvent evt) {
+    					jButtonUpdateMouseClicked(evt);
+    				}
+    			});
     		}
-    	}
-        show(topPanel);
+    		{
+    			jButtonDelete = new JButton();
+    			topPanel.add(jButtonDelete);
+    			jButtonDelete.setBounds(332, 167, 63, 23);
+    			jButtonDelete.setName("jButtonDelete");
+    			jButtonDelete.addMouseListener(new MouseAdapter() {
+    				public void mouseClicked(MouseEvent evt) {
+    					jButtonDeleteMouseClicked(evt);
+    				}
+    			});
+    		}
+    	}        show(topPanel);
     }
 
     public static void main(String[] args) {
@@ -240,7 +275,7 @@ public class InputEdit extends SingleFrameApplication {
     
     private void jButton2MouseClicked(MouseEvent evt) throws SQLException 
     {
-    	
+    	Clear();
     	boolean flag=aUI.DisplayPressed(getJComboBoxBulan(), getJComboBoxTahun(), getComboBoxSite());
     	System.out.println(flag);
     	if (flag==true)
@@ -250,7 +285,14 @@ public class InputEdit extends SingleFrameApplication {
     		jTextFieldRiset.setText(aUI.getRiset());
     	}
     	else
+    	{
     		JOptionPane.showMessageDialog( topPanel ,  Constants.DATA_NOT_EXIST, "Database Result", JOptionPane.INFORMATION_MESSAGE);
+    		
+
+    	}
+    	jButtonInput.setEnabled(!flag);
+		jButtonUpdate.setEnabled(flag);
+		jButtonDelete.setEnabled(flag);
       	
     }
     
@@ -290,12 +332,27 @@ public class InputEdit extends SingleFrameApplication {
     
     private void jButtonInputMouseClicked(MouseEvent evt) throws SQLException 
     {
+    	
     	if(!jButtonInput.isEnabled())
     	{
     		
     	}
     	else
-    	aUI.inputPressed();
+    	{
+    		int val=aUI.inputPressed(getjTextFieldFresh(), getjTextFieldNRP(), getjTextFieldRiset(),jTextFile.getText());
+    		if (val!=0)
+    		{
+        		JOptionPane.showMessageDialog( topPanel ,  Constants.DATA_INPUTTED, "Database Result", JOptionPane.INFORMATION_MESSAGE);
+        		Clear();
+        		jButtonInput.setEnabled(false);
+    		}
+    		else
+    		{
+        		JOptionPane.showMessageDialog( topPanel ,  Constants.NO_EFFECT, "Database Result", JOptionPane.INFORMATION_MESSAGE);
+
+    		}
+    		
+    	}
     }
     
     private void jButtonRambahMouseClicked(MouseEvent evt) {
@@ -303,8 +360,80 @@ public class InputEdit extends SingleFrameApplication {
     	//TODO add your code for jButtonRambah.mouseClicked
     }
     
-    private void jButtonClearMouseClicked(MouseEvent evt) {
+    private void jButtonClearMouseClicked(MouseEvent evt) 
+    {
     	System.out.println("jButtonClear.mouseClicked, event="+evt);
     	//TODO add your code for jButtonClear.mouseClicked
+    	Clear();
+    }
+    
+    private void Clear()
+    {
+    	jTextFieldFresh.setText("");
+    	jTextFieldNRP.setText("");
+    	jTextFieldRiset.setText("");
+    	
+    }
+    
+    private void jButtonUpdateMouseClicked(MouseEvent evt) 
+    {
+    	//TODO add your code for jButtonUpdate.mouseClicked
+    	if (!jButtonUpdate.isEnabled())
+    	{
+    		
+    	}
+    	else
+    	{
+    		int val= aUI.UpdatePressed(getjTextFieldFresh(), getjTextFieldNRP(), getjTextFieldRiset(),jTextFile.getText());
+    		if (val!=0)
+    		{
+        		JOptionPane.showMessageDialog( topPanel ,  Constants.DATA_UPDATE, "Database Result", JOptionPane.INFORMATION_MESSAGE);
+        		
+    		}
+    		else
+    		{
+        		JOptionPane.showMessageDialog( topPanel ,  Constants.NO_EFFECT, "Database Result", JOptionPane.INFORMATION_MESSAGE);
+
+    		}
+    		Clear();
+    		jButtonUpdate.setEnabled(false);
+    		jButtonDelete.setEnabled(false);
+    		
+    	}
+    }
+    
+    private void jButtonDeleteMouseClicked(MouseEvent evt)
+    {
+    	
+    	if (!jButtonDelete.isEnabled())
+    	{
+    		
+    	}
+    	else
+    	{
+    		int opt= JOptionPane.showConfirmDialog(topPanel, Constants.WARN_DELETE, "Confirmation", 2);
+    		if (opt==Constants.OK)
+    		{
+    			int val=aUI.deletePressed();
+    			if (val!=0)
+        		{
+            		JOptionPane.showMessageDialog( topPanel ,  Constants.DATA_DELETED, "Database Result", JOptionPane.INFORMATION_MESSAGE);
+            		
+        		}
+        		else
+        		{
+            		JOptionPane.showMessageDialog( topPanel ,  Constants.NO_EFFECT, "Database Result", JOptionPane.INFORMATION_MESSAGE);
+
+        		}
+    			Clear();
+    			jButtonDelete.setEnabled(false); 
+    			jButtonUpdate.setEnabled(false);
+    		}
+    		else
+    		{
+    			
+    		}
+    	
+    	}
     }
 }

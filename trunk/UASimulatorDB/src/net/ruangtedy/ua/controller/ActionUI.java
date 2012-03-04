@@ -1,7 +1,9 @@
 package net.ruangtedy.ua.controller;
 
 
+import java.rmi.ConnectException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,6 +23,9 @@ public class ActionUI
 	private String bulan;
 	private String tahun;
 	private String site;
+	private String file=null;
+	OConnection conn;
+	Connection con;
 	
 	public boolean DisplayPressed(String bulan, String tahun, String site) throws SQLException
 	{
@@ -30,12 +35,7 @@ public class ActionUI
 		this.tahun=tahun;
 		this.site=site;
 		
-		System.out.println("Trying ot Connecting into DB Local");
-		OConnection conn= odbmysql.createConnection();
-		System.out.println("Connection Success ");
-		
-		Connection con=conn.getConnection();
-		
+		ConnectIntoDBLocal();
 		Statement stmt = con.createStatement();
 		String query = "Select * FROM datapemakaian WHERE (id = "+id+")";
 
@@ -74,19 +74,73 @@ public class ActionUI
 	}
 
 	
+	public int UpdatePressed(String fresh, String nrp, String riset, String file)
+	{
+		ConnectIntoDBLocal();
+		int val = 0;
+		String sql = "UPDATE datapemakaian SET Fresh ="+fresh+"," +
+											   "NRP ="+nrp+","+
+											   "Riset ="+riset+","+
+											   "File ='"+file+"'"+
+					 "WHERE (id="+id+")";
+		try 
+		{
+			Statement stmt;
+
+			stmt = con.createStatement();
+			val = stmt.executeUpdate(sql);
+			con.close();									
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return val;
+		
+
+
+	}
 	
-	public void inputPressed() throws SQLException
+	public int inputPressed(String fresh, String nrp, String riset, String file) throws SQLException
 	{
 		
 		date = iddata.getDate(bulan, tahun);
-		System.out.println(date);
-		//return id;
+		//System.out.println("data="+date);
+		
+		ConnectIntoDBLocal();
+		String update="INSERT into datapemakaian Values ("+id+",'"+date+"','"+site+"',"+fresh+","+nrp+","+riset+",'"+file+"')";
+		Statement stmt = con.createStatement();
+		int val = stmt.executeUpdate(update);
+		con.close();
+
+		return val;
+	}
+	
+	public int deletePressed()
+	{
+		int val=0;
+		ConnectIntoDBLocal();
+		String sql="DELETE FROM datapemakaian WHERE (id ="+id+" )";
+		Statement stmt;
+		try {
+			stmt = con.createStatement();
+			val = stmt.executeUpdate(sql);
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		return val;		
+	}
+	private void ConnectIntoDBLocal()
+	{
 		System.out.println("Trying ot Connecting into DB Local");
-		OConnection conn= odbmysql.createConnection();
+		conn= odbmysql.createConnection();
 		System.out.println("Connection Success ");
 		
-		Connection con=conn.getConnection();
-		
-		Statement stmt = con.createStatement();
+		con=conn.getConnection();
+
 	}
 }
