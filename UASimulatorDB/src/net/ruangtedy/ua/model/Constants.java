@@ -26,8 +26,15 @@ public class Constants
 	public static final String DESEMBER="12";
 	
 	public static final int YEAR_LEVEL=2009;
+	public static final int OK=0;
+	public static final int CANCEL=2;
 	
 	public static final String DATA_NOT_EXIST="No Data is exist";
+	public static final String DATA_INPUTTED="Input New Data is Succes";
+	public static final String NO_EFFECT="No row Effected";
+	public static final String DATA_UPDATE="Data has been  successfully updated";
+	public static final String WARN_DELETE="Are you sure to delete this data? This operation cannot be restored";
+	public static final String DATA_DELETED="Your Data has been  successfully deleted ";
 	
 	public Constants() 
 	{
