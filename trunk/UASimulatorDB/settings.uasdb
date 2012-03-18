@@ -1,4 +1,5 @@
 #UASDB properties
 
 app_root_path             = c:\\UASDataBase\\
-
+path_file				  = d:\\Side\\excel\\
+table_name				  = datapemakaian

@@ -13,7 +13,8 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 
-public class UserInterface extends JFrame {
+public class UserInterface extends JFrame 
+{
 
 	private JPanel contentPane;
 	private JTextField textField;
