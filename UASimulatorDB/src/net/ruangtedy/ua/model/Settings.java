@@ -61,5 +61,18 @@ public class Settings
 	{
 		return get("hst_sys_password", "");
 	}
+	
+	public static String getPathFile()
+	{
+		return get("path_file", "c:\\UASDataBase\\excel\\");
+
+	}
+	
+	
+
+	public static String getTableName() 
+	{
+		return get("table_name", "datapemakaian");
+	}
 
 }

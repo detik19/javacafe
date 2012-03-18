@@ -2,6 +2,8 @@ package net.ruangtedy.ua.view;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +13,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -27,8 +30,11 @@ import net.ruangtedy.ua.controller.ActionUI;
 import net.ruangtedy.ua.controller.ODBConnectionmySQL;
 import net.ruangtedy.ua.model.Constants;
 import net.ruangtedy.ua.model.OConnection;
+import net.ruangtedy.ua.model.Settings;
 
 import org.jdesktop.application.SingleFrameApplication;
+
+import dummy.FileChooserDemo;
 
 
 /**
@@ -62,6 +68,7 @@ public class InputEdit extends SingleFrameApplication {
     private JButton jButtonRambah;
     private JLabel jLabel4;
     private JButton jButtonInput;
+    private JButton jButtonOpenDoc;
     private JButton jButtonDelete;
     private JMenu jMenu2;
     private JMenu jMenu1;
@@ -73,7 +80,7 @@ public class InputEdit extends SingleFrameApplication {
     private JComboBox jComboBoxSite;
 	ODBConnectionmySQL odbmysql=new ODBConnectionmySQL();
     private int id;
-    
+    JFileChooser fc;
     ActionUI aUI= new ActionUI();
     @Override
     protected void startup() {
@@ -194,7 +201,7 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jButtonInput = new JButton();
     			topPanel.add(jButtonInput);
-    			jButtonInput.setBounds(182, 167, 67, 23);
+    			jButtonInput.setBounds(182, 184, 67, 23);
     			jButtonInput.setName("jButtonInput");
     			jButtonInput.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
@@ -212,18 +219,18 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jLabel4 = new JLabel();
     			topPanel.add(jLabel4);
-    			jLabel4.setBounds(21, 131, 23, 14);
+    			jLabel4.setBounds(22, 126, 23, 14);
     			jLabel4.setName("jLabel4");
     		}
     		{
     			jTextFile = new JTextField();
     			topPanel.add(jTextFile);
-    			jTextFile.setBounds(76, 125, 216, 20);
+    			jTextFile.setBounds(74, 123, 216, 20);
     		}
     		{
     			jButtonRambah = new JButton();
     			topPanel.add(jButtonRambah);
-    			jButtonRambah.setBounds(301, 122, 71, 23);
+    			jButtonRambah.setBounds(300, 122, 71, 23);
     			jButtonRambah.setName("jButtonRambah");
     			jButtonRambah.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
@@ -234,7 +241,7 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jButtonClear = new JButton();
     			topPanel.add(jButtonClear);
-    			jButtonClear.setBounds(110, 167, 57, 23);
+    			jButtonClear.setBounds(119, 184, 57, 23);
     			jButtonClear.setName("jButtonClear");
     			jButtonClear.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
@@ -245,7 +252,7 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jButtonUpdate = new JButton();
     			topPanel.add(jButtonUpdate);
-    			jButtonUpdate.setBounds(259, 167, 67, 23);
+    			jButtonUpdate.setBounds(255, 184, 67, 23);
     			jButtonUpdate.setName("jButtonUpdate");
     			jButtonUpdate.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
@@ -256,11 +263,27 @@ public class InputEdit extends SingleFrameApplication {
     		{
     			jButtonDelete = new JButton();
     			topPanel.add(jButtonDelete);
-    			jButtonDelete.setBounds(332, 167, 63, 23);
+    			jButtonDelete.setBounds(328, 184, 63, 23);
     			jButtonDelete.setName("jButtonDelete");
     			jButtonDelete.addMouseListener(new MouseAdapter() {
     				public void mouseClicked(MouseEvent evt) {
     					jButtonDeleteMouseClicked(evt);
+    				}
+    			});
+    		}
+    		{
+    			jButtonOpenDoc = new JButton();
+    			topPanel.add(jButtonOpenDoc);
+    			jButtonOpenDoc.setBounds(379, 122, 88, 23);
+    			jButtonOpenDoc.setName("jButtonOpenDoc");
+    			jButtonOpenDoc.addMouseListener(new MouseAdapter() {
+    				public void mouseClicked(MouseEvent evt) {
+    					try {
+							jButtonOpenDocMouseClicked(evt);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
     				}
     			});
     		}
@@ -283,6 +306,7 @@ public class InputEdit extends SingleFrameApplication {
     		jTextFieldFresh.setText(aUI.getFresh());
     		jTextFieldNRP.setText(aUI.getNrp());
     		jTextFieldRiset.setText(aUI.getRiset());
+    		jTextFile.setText(aUI.getFile());
     	}
     	else
     	{
@@ -293,6 +317,11 @@ public class InputEdit extends SingleFrameApplication {
     	jButtonInput.setEnabled(!flag);
 		jButtonUpdate.setEnabled(flag);
 		jButtonDelete.setEnabled(flag);
+		
+		if (!(jTextFile.getText().equals("")))
+		{
+			jButtonOpenDoc.setEnabled(true);
+		}
       	
     }
     
@@ -355,9 +384,37 @@ public class InputEdit extends SingleFrameApplication {
     	}
     }
     
-    private void jButtonRambahMouseClicked(MouseEvent evt) {
+    private void jButtonRambahMouseClicked(MouseEvent evt) 
+    {
     	System.out.println("jButtonRambah.mouseClicked, event="+evt);
-    	//TODO add your code for jButtonRambah.mouseClicked
+    	//TODO add your code for jButtonRambah.mouseClicked\
+    	System.out.println(Settings.getPathFile());
+    	if (fc == null) 
+        {
+            fc = new JFileChooser();
+
+	
+        }
+
+        //Show it.
+        int returnVal = fc.showDialog(topPanel, "Open"); //(frame, "simpan");
+
+        //Process the results.
+        if (returnVal == JFileChooser.APPROVE_OPTION) 
+        {
+            File file = fc.getSelectedFile();
+            jTextFile.setText(file.getPath());
+            String namafile=file.getName();
+            
+        } else 
+        {
+
+        }
+       
+
+        //Reset the file chooser for the next time it's shown.
+        fc.setSelectedFile(null);
+    	
     }
     
     private void jButtonClearMouseClicked(MouseEvent evt) 
@@ -372,7 +429,8 @@ public class InputEdit extends SingleFrameApplication {
     	jTextFieldFresh.setText("");
     	jTextFieldNRP.setText("");
     	jTextFieldRiset.setText("");
-    	
+    	jTextFile.setText("");
+    	jButtonOpenDoc.setEnabled(false);
     }
     
     private void jButtonUpdateMouseClicked(MouseEvent evt) 
@@ -434,6 +492,24 @@ public class InputEdit extends SingleFrameApplication {
     			
     		}
     	
+    	}
+    }
+    
+    private void jButtonOpenDocMouseClicked(MouseEvent evt) throws IOException 
+    {
+    	System.out.println("jButtonOpenDoc.mouseClicked, event="+evt);
+    	//TODO add your code for jButtonOpenDoc.mouseClicked
+    	if(!jButtonOpenDoc.isEnabled())
+    	{
+    		
+    	}
+    	else
+    	{
+    		File document=new File(Settings.getPathFile()+aUI.getFile());
+    		if (document.exists())
+    		{
+    			aUI.open(document);
+    		}
     	}
     }
 }

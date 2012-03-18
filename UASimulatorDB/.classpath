@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="lib/appFramework-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jnlp.jar"/>
 	<classpathentry kind="lib" path="lib/forms-1.1.0.jar"/>
+	<classpathentry kind="lib" path="D:/06 Java/resource/jfreechart-1.0.14/jfreechart-1.0.14/lib/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="D:/06 Java/resource/jfreechart-1.0.14/jfreechart-1.0.14/lib/jcommon-1.0.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
