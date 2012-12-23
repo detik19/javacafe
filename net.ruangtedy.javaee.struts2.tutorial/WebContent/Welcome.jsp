@@ -7,5 +7,6 @@
  
 <body>
     <h2>Howdy, <s:property value="username" />...!</h2>
+    <s:a href="Customer.jsp">Add Customer</s:a>
 </body>
 </html>
