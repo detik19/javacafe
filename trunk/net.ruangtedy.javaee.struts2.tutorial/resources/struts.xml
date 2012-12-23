@@ -16,5 +16,12 @@
             <result name="success">Welcome.jsp</result>
             <result name="error">Login.jsp</result>
         </action>
+        <action name="customer"
+        	class="net.ruangtedy.javaee.struts2.tutorial.CustomerAction">
+        	<result name="success">SuccessCustomer.jsp</result>
+        	<result name="input">Customer.jsp</result>
+        
+        </action>
+        
     </package>
 </struts>
